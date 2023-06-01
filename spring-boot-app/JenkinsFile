@@ -2,14 +2,14 @@ pipeline {
   agent {
     docker {
       image 'rahman777/maven-docker-agent:v1'
-      args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
+      //args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
     }
   }
   stages {
     stage('Checkout') {
       steps {
         sh 'echo passed'
-        git branch: 'main', url: 'https://github.com/abdulrahman911/springboot-webapp.git'
+       //git branch: 'main', url: 'https://github.com/abdulrahman911/springboot-webapp.git'
       }
     }
     stage('Build and Test') {
@@ -27,7 +27,6 @@ pipeline {
         script {
         withCredentials([string(credentialsId: 'sonarqube-api-token-springboot', variable: 'SONAR_AUTH_TOKEN')]) {
             sh 'cd spring-boot-app && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
-            sh 'chown -R jenkins:jenkins .'
         }
         }
         //withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
@@ -62,10 +61,11 @@ pipeline {
                     git config --global user.email "rahmanuk91@gmail.com"
                     git config --global user.name "Abdul Rahman UK"
                     BUILD_NUMBER=${BUILD_NUMBER}
+                    git clone -b dev https://github.com/abdulrahman911/springboot-webapp.git
                     sed -i "s+rahman777/springboot-webapp-cicd.*+rahman777/springboot-webapp-cicd:${BUILD_NUMBER}+g" spring-boot-app-manifests/deployment.yml
                     git add spring-boot-app-manifests/deployment.yml
                     git commit -m "Update deployment image to version ${BUILD_NUMBER}"
-                    git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                    git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:dev
                 '''
             }
         }
