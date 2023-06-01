@@ -27,6 +27,7 @@ pipeline {
 
         withCredentials([string(credentialsId: 'sonarqube-api-token-springboot', variable: 'SONAR_AUTH_TOKEN')]) {
             sh 'cd spring-boot-app && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+            sh 'chown -R jenkins:jenkins .'
         }
         //withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
           //sh 'cd spring-boot-app && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
