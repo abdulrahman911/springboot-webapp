@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: spring-boot-app
-        image: rahman777/springboot-webapp-cicd:18
+        image: rahman777/springboot-webapp-cicd:47
         ports:
         - containerPort: 8080
